@@ -1,5 +1,25 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# next.js
+/.next/
+/out/
+/build
+
+# misc
 .DS_Store
-npm-debug.log
+*.pem
 *.log
+npm-debug.log*
+
+# local env files
+.env*.local
+
+# editors
 .vscode/
 .idea/
+
+# vercel
+.vercel

@@ -23,7 +23,7 @@ favorites, bookings, and planning data are stored in Firestore under their accou
 
 ## 3. Paste the config into the app
 
-Open **`assets/js/firebase-config.js`** and replace the placeholders with your values:
+Open **`public/legacy/firebase-config.js`** and replace the placeholders with your values:
 
 ```js
 window.FIREBASE_CONFIG = {
@@ -89,9 +89,9 @@ add that domain here too.
 
 ## How it works (for reference)
 
-- `assets/js/firebase-config.js` — your keys (the only file you edit).
-- `assets/js/firebase.js` — lazily loads the Firebase SDK and wraps Auth + Firestore.
-- `assets/js/store.js` — automatically uses Firebase when configured, otherwise local mode.
+- `public/legacy/firebase-config.js` — your keys (the only file you edit).
+- `public/legacy/firebase.js` — lazily loads the Firebase SDK and wraps Auth + Firestore.
+- `public/legacy/store.js` — automatically uses Firebase when configured, otherwise local mode.
   The UI code never changed; data just persists to the cloud instead of the device.
 
 ## Reverting to local mode

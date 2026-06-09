@@ -4,7 +4,8 @@ An elegant, bilingual (Arabic / English) wedding-planner web app for women in Ku
 Create an account, browse wedding vendors, save favorites, compare options, plan a checklist,
 manage a budget, and send booking requests — all in one luxurious, easy-to-use interface.
 
-**100% front-end. No build step, no server, no backend.** Just open `index.html`.
+Built with **Next.js** (App Router). Front-end only — no custom server required. Accounts work
+on-device out of the box, or sync across devices once you connect Firebase.
 
 ---
 
@@ -34,15 +35,26 @@ manage a budget, and send booking requests — all in one luxurious, easy-to-use
 
 ## 🚀 Running it
 
-Just **double-click `index.html`** — it works offline straight from the file system.
-
-Or serve it locally (nicer for development):
+You need [Node.js](https://nodejs.org) (18+) installed. Then:
 
 ```bash
 cd wedding-planner
-python3 -m http.server 5050
-# then open http://localhost:5050
+npm install      # first time only
+npm run dev      # start the dev server
+# open http://localhost:3000
 ```
+
+For a production build:
+
+```bash
+npm run build
+npm start
+```
+
+### Deploy (free, no local setup needed)
+Because it's a standard Next.js app, you can deploy it straight from GitHub with
+[**Vercel**](https://vercel.com): import the repo and click deploy — Vercel installs and builds
+it in the cloud and gives you a public URL.
 
 ---
 
@@ -50,19 +62,28 @@ python3 -m http.server 5050
 
 ```
 wedding-planner/
-├── index.html              # App shell (header, footer, script includes)
-└── assets/
-    ├── css/
-    │   └── styles.css      # Full design system
-    └── js/
-        ├── firebase-config.js  # Your Firebase keys (the only file you edit to go live)
-        ├── firebase.js         # Lazily loads Firebase Auth + Firestore (optional)
-        ├── i18n.js         # English + Arabic translations, language switching
-        ├── data.js         # Vendor & category mock data (edit this to add vendors)
-        ├── store.js        # Accounts (auth) + per-user persistence (local OR Firebase)
-        ├── ui.js           # Helpers: image placeholders, icons, toast, modal
-        └── app.js          # Router + auth gate + all page views + interactions
+├── app/
+│   ├── layout.js        # Root layout: fonts, metadata, <html> shell
+│   ├── page.js          # Mounts the app (renders the shell, loads the modules below)
+│   └── globals.css      # Full design system (the styling)
+├── public/
+│   └── legacy/          # App logic (framework-agnostic, runs in the browser)
+│       ├── firebase-config.js  # Your Firebase keys (the only file you edit to go live)
+│       ├── firebase.js         # Lazily loads Firebase Auth + Firestore (optional)
+│       ├── i18n.js             # English + Arabic translations, language switching
+│       ├── data.js             # Vendor & category mock data (edit to add vendors)
+│       ├── store.js            # Accounts (auth) + per-user persistence (local OR Firebase)
+│       ├── ui.js               # Helpers: image placeholders, icons, toast, modal
+│       └── app.js              # Router + auth gate + all page views + interactions
+├── next.config.mjs
+├── jsconfig.json
+└── package.json
 ```
+
+> **Why this structure?** The conversion preserves the exact look and every feature by keeping
+> the proven app logic in `public/legacy/*` and mounting it inside the Next.js App Router. The
+> design system lives in `app/globals.css`. To refactor the views into idiomatic React
+> components later, you can migrate them one page at a time.
 
 ---
 
@@ -84,7 +105,7 @@ prototype; nothing leaves the device. Stored under these `localStorage` keys:
 > server verifying logins. Use it for prototyping only.
 
 **Firebase mode (recommended for real users).** Paste your Firebase keys into
-[`assets/js/firebase-config.js`](assets/js/firebase-config.js) and follow
+[`public/legacy/firebase-config.js`](public/legacy/firebase-config.js) and follow
 [`SETUP-FIREBASE.md`](SETUP-FIREBASE.md). Sign-up/login then run through **Firebase
 Authentication** (passwords are handled securely by Google, never stored by us) and each user's
 data syncs to **Firestore**, so it follows them across devices. Per-user access is locked down
@@ -95,7 +116,7 @@ by Firestore security rules. No app code changes needed — just the config.
 ## ✏️ Customizing
 
 ### Add or edit vendors
-Open `assets/js/data.js` and add to the `VENDORS` array using the `biz(...)` helper:
+Open `public/legacy/data.js` and add to the `VENDORS` array using the `biz(...)` helper:
 
 ```js
 biz("halls", F("My New Hall", "اسم القاعة"), AREAS[0], 900, 4.8, 120, {
@@ -116,10 +137,10 @@ To use real photos, give each vendor an `images: ["url1", "url2", ...]` field in
 and update `UI.imgPh()` in `ui.js` to render an `<img src>` when images are present.
 
 ### Change colors / fonts
-All design tokens live at the top of `assets/css/styles.css` under `:root`.
+All design tokens live at the top of `app/globals.css` under `:root`.
 
 ### Add or change wording
-All UI text is in `assets/js/i18n.js` — every string has an `en` and `ar` version.
+All UI text is in `public/legacy/i18n.js` — every string has an `en` and `ar` version.
 
 ---
 
